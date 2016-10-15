@@ -1,4 +1,13 @@
 set -e
+#Fix ownership of output files
+finish() {
+    # Fix ownership of output files
+    user_id=$(stat -c '%u:%g' /data)
+    chown -R ${user_id} /data
+}
+trap finish EXIT
 
-/home/progressiveCactus/submodules/cactus/bin/${1} "${@:2}"
+>&2 echo "Running comand " /home/progressiveCactus/submodules/cactus/bin/${1} ${@:2}
+>&2 ls -la
+exec /home/progressiveCactus/submodules/cactus/bin/${1} ${@:2}
 
