@@ -7,7 +7,7 @@ finish() {
 }
 trap finish EXIT
 
->&2 echo "Running comand " /home/progressiveCactus/submodules/cactus/bin/${1} ${@:2}
+>&2 echo "Running comand " /home/cactus/bin/${1} ${@:2}
 >&2 ls -la
-exec /home/progressiveCactus/submodules/cactus/bin/${1} ${@:2}
+exec /home/cactus/bin/${1} ${@:2}
 

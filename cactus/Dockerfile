@@ -1,28 +1,27 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install -y git gcc g++ build-essential python-dev zlib1g-dev wget valgrind
-
-RUN ln -s /usr/lib/python2.7/plat-*/_sysconfigdata_nd.py /usr/lib/python2.7/
+RUN apt-get update && apt-get install -y git gcc g++ build-essential python-dev zlib1g-dev libkyototycoon-dev libtokyocabinet-dev libkyotocabinet-dev wget valgrind libbz2-dev
 
 
-RUN git clone https://github.com/glennhickey/progressiveCactus /home/progressiveCactus
+RUN git clone https://github.com/UCSCComparativeGenomics/sonLib /home/sonLib
+RUN git clone https://github.com/UCSCComparativeGenomics/matchingAndOrdering /home/matchingAndOrdering
+RUN git clone https://github.com/UCSCComparativeGenomics/pinchesAndCacti /home/pinchesAndCacti
 
-WORKDIR /home/progressiveCactus
+RUN git clone https://github.com/UCSCComparativeGenomics/cactus /home/cactus
 
-RUN git submodule update --init
-RUN cd /home/progressiveCactus/submodules/cactus && git checkout toil-docker && git pull
+ENV sonLibRootPath /home/sonLib
+RUN cd /home/sonLib && make
+RUN cd /home/matchingAndOrdering && make
+RUN cd /home/pinchesAndCacti && make
 
+RUN cd /home/cactus && git checkout toil-docker
+RUN cd /home/cactus && make
 
-WORKDIR /home/progressiveCactus
-
-RUN make
 
 #HACK - eventually all python code should be pip-installed and not run
 #in containers, but for now there are various python executables
 #that depend on sonLib
-ENV PYTHONPATH $PYTHONPATH:/home/progressiveCactus/submodules/
-
-
+ENV PYTHONPATH $PYTHONPATH:/home/
 
 COPY ./wrapper.sh /home/wrapper.sh
 RUN mkdir /data
