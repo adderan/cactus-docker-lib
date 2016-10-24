@@ -15,8 +15,8 @@ ${build_output}: build/Dockerfile
 
 ${build_tool}: ${build_output} runtime/Dockerfile
 	cd runtime && docker build -t ${name}:${tag} .
-	docker tag -f ${name}:${tag} ${name}:latest
-	docker rmi -f lastzbuild
+	docker tag ${name}:${tag} ${name}:latest
+	#docker rmi lastzbuild
 	touch ${build_tool}
 
 push: build
